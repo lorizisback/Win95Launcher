@@ -1,19 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/desktop_background"
     tools:context="com.winlauncher.loriz.win95launcher.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_main"
-        app:layout_constraintLeft_toLeftOf="@+id/activity_main"
-        app:layout_constraintRight_toRightOf="@+id/activity_main"
-        app:layout_constraintTop_toTopOf="@+id/activity_main" />
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="7dp"
+        android:background="@drawable/bottom_bar_stretchable"
+        android:id="@+id/bottom_bar_container">
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/start_button_normal"
+            android:layout_centerVertical="true"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:src="@drawable/start_unpressed"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/start_button_pressed"
+            android:layout_centerVertical="true"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:src="@drawable/start_pressed"
+            android:visibility="invisible"/>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+            
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/start_menu_container"
+        android:layout_width="308dp"
+        android:layout_height="410dp"
+        android:layout_marginBottom="-7dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/menu_concept"
+        android:layout_above="@+id/bottom_bar_container"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible">
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
