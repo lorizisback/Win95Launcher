@@ -8,9 +8,8 @@ import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isStartOpen = false;
+    private boolean isOpen = false;
     private ImageView startNormal;
-    private ImageView startPressed;
     private RelativeLayout startMenu;
 
     @Override
@@ -18,19 +17,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startNormal = (ImageView) findViewById(R.id.start_button_normal);
-        startPressed = (ImageView) findViewById(R.id.start_button_pressed);
+        startNormal = (ImageView) findViewById(R.id.start_button);
         startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
 
         View.OnClickListener clickList = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isStartOpen = startToggler();
+                isOpen = startToggler();
             }
         };
 
         startNormal.setOnClickListener(clickList);
-        startPressed.setOnClickListener(clickList);
 
 
 
@@ -38,19 +35,21 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean startToggler()
     {
-        if (isStartOpen) {
-            startNormal.setVisibility(View.INVISIBLE);
-            startPressed.setVisibility(View.VISIBLE);
-            startMenu.setVisibility(View.INVISIBLE);
+        if (isOpen == false) {
+            startNormal.setImageResource(R.drawable.start_pressed);
+            startMenu.setVisibility(View.VISIBLE);
 
         } else {
-            startNormal.setVisibility(View.VISIBLE);
-            startPressed.setVisibility(View.INVISIBLE);
-            startMenu.setVisibility(View.VISIBLE);
+            startNormal.setImageResource(R.drawable.start_unpressed);
+            startMenu.setVisibility(View.INVISIBLE);
         }
 
-        return !isStartOpen;
+        return !isOpen;
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isOpen == true) isOpen = startToggler();
+    }
 }

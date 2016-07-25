@@ -20,20 +20,12 @@
         android:id="@+id/bottom_bar_container">
 
         <ImageView
-            android:id="@+id/start_button_normal"
+            android:id="@+id/start_button"
             android:layout_centerVertical="true"
             android:layout_width="100dp"
             android:layout_height="40dp"
             android:src="@drawable/start_unpressed"
             android:visibility="visible"/>
-
-        <ImageView
-            android:id="@+id/start_button_pressed"
-            android:layout_centerVertical="true"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:src="@drawable/start_pressed"
-            android:visibility="invisible"/>
 
 
         <RelativeLayout
