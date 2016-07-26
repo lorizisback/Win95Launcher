@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="desktop_background">#008080</color>
+    <color name="bottom_bar_grey">#c0c0c0</color>
+    <color name="side_bar_dark_grey">#808080</color>
 </resources>
