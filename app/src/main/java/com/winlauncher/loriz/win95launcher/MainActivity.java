@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,11 @@ import android.widget.RelativeLayout;
 
 
 import com.febaisi.CustomTextView;
+import com.winlauncher.loriz.win95launcher.adapters.StartMenuAdapter;
+import com.winlauncher.loriz.win95launcher.items.MenuEntry;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends Activity {
@@ -25,12 +30,16 @@ public class MainActivity extends Activity {
     private boolean isOpen = false;
     private ImageView startNormal;
     private RelativeLayout startMenu;
-    BroadcastReceiver broadcastReceiver;
+    private RecyclerView startMenuEntries;
+    private BroadcastReceiver broadcastReceiver;
     private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     private CustomTextView clockTextview;
     private LinearLayout taskbarContainer;
     private int menuHeight;
     private int menuWidth;
+    public int menuItemHeight;
+    private LinearLayoutManager mLayoutManager;
+    private double MENU_ITEM_RATIO = 3.63;
 
 
     @Override
@@ -40,6 +49,7 @@ public class MainActivity extends Activity {
 
         startNormal = (ImageView) findViewById(R.id.start_button);
         startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
+        startMenuEntries = (RecyclerView) startMenu.findViewById(R.id.start_menu_entries);
         taskbarContainer = (LinearLayout) findViewById(R.id.taskbar_container);
         clockTextview = (CustomTextView) findViewById(R.id.clock_textview);
         clockTextview.getPaint().setAntiAlias(false);
@@ -56,16 +66,39 @@ public class MainActivity extends Activity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        menuHeight = (size.y*2)/3;
+        menuHeight = (size.y*2)/4;
         menuWidth = (size.x*2)/3;
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(menuWidth,menuHeight);
+        menuItemHeight = (int)(menuWidth / MENU_ITEM_RATIO);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(menuWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ABOVE,R.id.bottom_bar_container);
         params.setMargins(7,0,0,-8);
 
         startMenu.setLayoutParams(params);
 
+        // PREPARE DATAS FOR MENU
+        ArrayList<MenuEntry> entries = prepareEntries();
+        startMenuEntries.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        startMenuEntries.setLayoutManager(mLayoutManager);
 
+        StartMenuAdapter sma = new StartMenuAdapter(entries);
 
+        startMenuEntries.setAdapter(sma);
+
+    }
+
+    private ArrayList<MenuEntry> prepareEntries() {
+
+        ArrayList<MenuEntry> out = new ArrayList<>();
+        out.add(new MenuEntry(R.drawable.shell32_20, getString(R.string.menu_programs_entry), "PROGRAMS",  true));
+        out.add(new MenuEntry(R.drawable.shell32_21, getString(R.string.menu_documents_entry), "DOCUMENTS", false));
+        out.add(new MenuEntry(R.drawable.shell32_22, getString(R.string.menu_settings_entry), "SETTINGS", false));
+        out.add(new MenuEntry(R.drawable.shell32_23, getString(R.string.menu_find_entry), "FIND", false));
+        out.add(new MenuEntry(R.drawable.shell32_24, getString(R.string.menu_help_entry), "HELP", false));
+        out.add(new MenuEntry(R.drawable.shell32_25, getString(R.string.menu_run_entry), "RUN",false));
+        out.add(new MenuEntry(R.drawable.shell32_28, getString(R.string.menu_shutdown_entry), "SHUTDOWN", false));
+
+        return out;
     }
 
     private boolean startToggler()

@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/win_95_menu_background"
     android:padding="8dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/side_bar_dark_grey"
         android:id="@+id/linearLayout">
 
         <ImageView
             android:layout_width="61dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@drawable/win_95_menu_logo"
-            android:scaleType="fitXY" />
+            android:layout_alignParentBottom="true"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_height="match_parent"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/start_menu_entries"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_toRightOf="@id/linearLayout"
-        ></LinearLayout>
+        android:layout_alignParentBottom="true"
+        />
 
 </RelativeLayout>

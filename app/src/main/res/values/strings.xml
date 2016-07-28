@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Win95Launcher</string>
+    <string name="menu_programs_entry">Programs</string>
+    <string name="menu_documents_entry">Documents</string>
+    <string name="menu_settings_entry">Settings</string>
+    <string name="menu_find_entry">Find</string>
+    <string name="menu_help_entry">Help</string>
+    <string name="menu_run_entry">Run...</string>
+    <string name="menu_shutdown_entry">Shut Down...</string>
 </resources>

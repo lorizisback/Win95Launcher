@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/start_menu_main_entry_icon"
+        android:layout_width="63dp"
+        android:layout_height="63dp"
+        android:scaleType="fitXY"/>
+
+    <com.febaisi.CustomTextView
+        android:id="@+id/start_menu_main_entry_label"
+        app:typeface="win95.ttf"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:textColor="#000000"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/start_menu_main_entry_triangle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/win_95_menu_entry_triangle"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/start_menu_main_entry_hidden_identifier"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        />
+
+</LinearLayout>

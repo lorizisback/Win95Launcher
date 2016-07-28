@@ -27,5 +27,6 @@ dependencies {
     compile 'com.febaisi:custom-textview:0.0.3'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha4'
+    compile 'com.android.support:recyclerview-v7:+'
     testCompile 'junit:junit:4.12'
 }
