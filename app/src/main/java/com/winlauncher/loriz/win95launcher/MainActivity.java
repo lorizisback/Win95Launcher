@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,7 +39,7 @@ public class MainActivity extends Activity {
     private RelativeLayout startMenu;
     private RecyclerView startMenuEntries;
     private BroadcastReceiver broadcastReceiver;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
     private CustomTextView clockTextview;
     private LinearLayout taskbarContainer;
     private int menuHeight;
@@ -49,7 +51,7 @@ public class MainActivity extends Activity {
     private RecyclerView programsMenuEntries;
     private LinearLayoutManager mLayoutManagerPrograms;
     private StartMenuAdapter sma;
-
+    private ImageView battery;
 
 
     @Override
@@ -61,6 +63,7 @@ public class MainActivity extends Activity {
         startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
         startMenuEntries = (RecyclerView) startMenu.findViewById(R.id.start_menu_entries);
         programsMenuEntries = (RecyclerView) findViewById(R.id.win_95_start_menu_programs_recyclerview);
+        battery = (ImageView) findViewById(R.id.taskbar_battery);
         taskbarContainer = (LinearLayout) findViewById(R.id.taskbar_container);
         clockTextview = (CustomTextView) findViewById(R.id.clock_textview);
         clockTextview.getPaint().setAntiAlias(false);
@@ -140,6 +143,8 @@ public class MainActivity extends Activity {
         } else {
             startNormal.setImageResource(R.drawable.start_unpressed);
             startMenu.setVisibility(View.INVISIBLE);
+            programsMenuEntries.setVisibility(View.INVISIBLE);
+            sma.isProgramsOpen=false;
         }
 
         return !isOpen;
@@ -151,7 +156,6 @@ public class MainActivity extends Activity {
         if (isOpen == true) {
 
             if (sma.isProgramsOpen == true) {
-                //isOpen = startToggler();
                 programsMenuEntries.setVisibility(View.INVISIBLE);
                 sma.isProgramsOpen = false;
             } else {
@@ -168,12 +172,36 @@ public class MainActivity extends Activity {
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context ctx, Intent intent) {
-                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0)
-                    clockTextview.setText(sdf.format(new Date()));
+
+                if (intent.getAction().compareTo(Intent.ACTION_BATTERY_CHANGED) == 0)
+                {
+                    int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE,-1);
+                    int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
+                    float percentage = level / (float) scale;
+
+                    Log.d("BATTERY", "SCALE: " + scale + " - LVL: " + level + " - PERCENTAGE: " + String.valueOf((int)((percentage)*100)));
+
+                    if (level <= 100 && level >75) {
+                        battery.setImageDrawable(getDrawable(R.drawable.systray_300));
+                    } else if (level <= 75 && level >25) {
+                        battery.setImageDrawable(getDrawable(R.drawable.systray_301));
+                    } else if (level <= 25 && level >5) {
+                        battery.setImageDrawable(getDrawable(R.drawable.systray_302));
+                    } else {
+                        battery.setImageDrawable(getDrawable(R.drawable.systray_303));
+                    }
+
+                }
+
+                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0)  clockTextview.setText(sdf.format(new Date()));
             }
         };
 
-        registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        IntentFilter timeBattery = new IntentFilter();
+        timeBattery.addAction(Intent.ACTION_TIME_TICK);
+        timeBattery.addAction(Intent.ACTION_BATTERY_CHANGED);
+
+        registerReceiver(broadcastReceiver, timeBattery);
 
     }
 

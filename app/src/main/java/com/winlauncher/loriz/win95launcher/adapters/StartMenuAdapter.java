@@ -88,7 +88,7 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    
+
                     pmentries.setVisibility(View.VISIBLE);
                     isProgramsOpen = true;
 
