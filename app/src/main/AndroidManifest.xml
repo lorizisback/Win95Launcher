@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.winlauncher.loriz.win95launcher">
+
+    <uses-sdk tools:overrideLibrary="com.febaisi"/>
+
 
     <application
         android:allowBackup="true"
@@ -11,6 +15,8 @@
         android:stateNotNeeded="true"
         android:theme="@style/AppTheme"
         android:screenOrientation="portrait">
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
 

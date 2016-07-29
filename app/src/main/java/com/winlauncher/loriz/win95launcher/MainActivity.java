@@ -27,6 +27,8 @@ import com.winlauncher.loriz.win95launcher.items.ProgramMenuEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class MainActivity extends Activity {
     private RelativeLayout startMenu;
     private RecyclerView startMenuEntries;
     private BroadcastReceiver broadcastReceiver;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
     private CustomTextView clockTextview;
     private LinearLayout taskbarContainer;
     private int menuHeight;
@@ -118,6 +120,14 @@ public class MainActivity extends Activity {
             apps.add(app);
         }
 
+        Collections.sort(apps, new Comparator<ProgramMenuEntry>() {
+            @Override
+            public int compare(ProgramMenuEntry programMenuEntry, ProgramMenuEntry t1) {
+                return programMenuEntry.getName().compareToIgnoreCase(t1.getName());
+            }
+
+        });
+
     }
 
     private ArrayList<MenuEntry> prepareEntries() {
@@ -179,16 +189,14 @@ public class MainActivity extends Activity {
                     int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
                     float percentage = level / (float) scale;
 
-                    Log.d("BATTERY", "SCALE: " + scale + " - LVL: " + level + " - PERCENTAGE: " + String.valueOf((int)((percentage)*100)));
-
                     if (level <= 100 && level >75) {
-                        battery.setImageDrawable(getDrawable(R.drawable.systray_300));
+                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_300));
                     } else if (level <= 75 && level >25) {
-                        battery.setImageDrawable(getDrawable(R.drawable.systray_301));
+                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_301));
                     } else if (level <= 25 && level >5) {
-                        battery.setImageDrawable(getDrawable(R.drawable.systray_302));
+                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_302));
                     } else {
-                        battery.setImageDrawable(getDrawable(R.drawable.systray_303));
+                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_303));
                     }
 
                 }
