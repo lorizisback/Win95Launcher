@@ -5,28 +5,33 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Point;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.febaisi.CustomTextView;
+import com.winlauncher.loriz.win95launcher.adapters.ProgramsMenuAdapter;
 import com.winlauncher.loriz.win95launcher.adapters.StartMenuAdapter;
 import com.winlauncher.loriz.win95launcher.items.MenuEntry;
+import com.winlauncher.loriz.win95launcher.items.ProgramMenuEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
+    private PackageManager manager;
+    private ArrayList<ProgramMenuEntry> apps;
     private boolean isOpen = false;
     private ImageView startNormal;
     private RelativeLayout startMenu;
@@ -40,6 +45,11 @@ public class MainActivity extends Activity {
     public int menuItemHeight;
     private LinearLayoutManager mLayoutManager;
     private double MENU_ITEM_RATIO = 3.63;
+    private RecyclerView list;
+    private RecyclerView programsMenuEntries;
+    private LinearLayoutManager mLayoutManagerPrograms;
+    private StartMenuAdapter sma;
+
 
 
     @Override
@@ -50,6 +60,7 @@ public class MainActivity extends Activity {
         startNormal = (ImageView) findViewById(R.id.start_button);
         startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
         startMenuEntries = (RecyclerView) startMenu.findViewById(R.id.start_menu_entries);
+        programsMenuEntries = (RecyclerView) findViewById(R.id.win_95_start_menu_programs_recyclerview);
         taskbarContainer = (LinearLayout) findViewById(R.id.taskbar_container);
         clockTextview = (CustomTextView) findViewById(R.id.clock_textview);
         clockTextview.getPaint().setAntiAlias(false);
@@ -63,28 +74,46 @@ public class MainActivity extends Activity {
 
         startNormal.setOnClickListener(clickList);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        menuHeight = (size.y*2)/4;
-        menuWidth = (size.x*2)/3;
-        menuItemHeight = (int)(menuWidth / MENU_ITEM_RATIO);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(menuWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ABOVE,R.id.bottom_bar_container);
-        params.setMargins(7,0,0,-8);
-
-        startMenu.setLayoutParams(params);
-
         // PREPARE DATAS FOR MENU
         ArrayList<MenuEntry> entries = prepareEntries();
         startMenuEntries.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         startMenuEntries.setLayoutManager(mLayoutManager);
 
-        StartMenuAdapter sma = new StartMenuAdapter(entries);
+        sma = new StartMenuAdapter(entries, programsMenuEntries);
 
         startMenuEntries.setAdapter(sma);
 
+
+
+        //PROGRAMS
+        loadApps();
+
+        programsMenuEntries.setHasFixedSize(true);
+        mLayoutManagerPrograms = new LinearLayoutManager(this);
+        programsMenuEntries.setLayoutManager(mLayoutManagerPrograms);
+
+        ProgramsMenuAdapter pma = new ProgramsMenuAdapter(apps);
+
+        programsMenuEntries.setAdapter(pma);
+
+
+
+    }
+
+
+    private void loadApps(){
+        manager = getPackageManager();
+        apps = new ArrayList<ProgramMenuEntry>();
+
+        Intent i = new Intent(Intent.ACTION_MAIN, null);
+        i.addCategory(Intent.CATEGORY_LAUNCHER);
+
+        List<ResolveInfo> availableActivities = manager.queryIntentActivities(i, 0);
+        for(ResolveInfo ri:availableActivities){
+            ProgramMenuEntry app = new ProgramMenuEntry(ri.activityInfo.loadIcon(manager), (String)ri.loadLabel(manager), ri.activityInfo.packageName);
+            apps.add(app);
+        }
     }
 
     private ArrayList<MenuEntry> prepareEntries() {
@@ -118,7 +147,16 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (isOpen == true) isOpen = startToggler();
+        if (isOpen == true) {
+
+            if (sma.isProgramsOpen == true) {
+                //isOpen = startToggler();
+                programsMenuEntries.setVisibility(View.INVISIBLE);
+                sma.isProgramsOpen = false;
+            } else {
+                isOpen = startToggler();
+            }
+        }
     }
 
 
@@ -135,6 +173,7 @@ public class MainActivity extends Activity {
         };
 
         registerReceiver(broadcastReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+
     }
 
     @Override
@@ -143,5 +182,7 @@ public class MainActivity extends Activity {
         if (broadcastReceiver != null)
             unregisterReceiver(broadcastReceiver);
     }
+
+
 
 }

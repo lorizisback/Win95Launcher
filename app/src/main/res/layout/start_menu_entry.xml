@@ -16,11 +16,11 @@
     <com.febaisi.CustomTextView
         android:id="@+id/start_menu_main_entry_label"
         app:typeface="win95.ttf"
+        android:textSize="16dp"
         android:layout_marginLeft="7dp"
         android:layout_marginRight="7dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
         android:textColor="#000000"/>
 
     <View

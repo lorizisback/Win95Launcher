@@ -23,10 +23,14 @@ import java.util.ArrayList;
 public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.StartMenuViewHolder> {
 
     private final ArrayList<MenuEntry> entryList;
-    private int menuItemHeight;
+    private RecyclerView pmentries;
+    public boolean isProgramsOpen;
 
-    public StartMenuAdapter(ArrayList<MenuEntry> entryList) {
+
+
+    public StartMenuAdapter(ArrayList<MenuEntry> entryList, RecyclerView pmentries) {
         this.entryList = entryList;
+        this.pmentries = pmentries;
     }
 
     @Override
@@ -52,6 +56,8 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
 
         if (entryList.get(position).isExpandable()) holder.entryTriangle.setVisibility(View.VISIBLE);
 
+
+
         if (holder.entryHiddenIdentifier.getText().equals("SETTINGS")) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,6 +80,19 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
                     } catch (Exception anfe) {
                     }
                 }
+            });
+
+        }
+
+        if (holder.entryHiddenIdentifier.getText().equals("PROGRAMS")) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    pmentries.setVisibility(View.VISIBLE);
+                    isProgramsOpen = true;
+
+                    }
             });
 
         }

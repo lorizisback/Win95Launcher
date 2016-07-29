@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/win_95_menu_background"
-    android:padding="8dp">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent" >
+
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/side_bar_dark_grey"
-        android:id="@+id/linearLayout">
+        android:layout_width="325dp"
+        android:layout_height="555dp"
+        android:background="@drawable/win_95_menu_background"
+        android:layout_alignParentBottom="true"
+        android:padding="8dp">
 
-        <ImageView
-            android:layout_width="61dp"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/win_95_menu_logo"
+            android:background="@color/side_bar_dark_grey"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/linearLayout">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/win_95_menu_logo_short"
+                android:layout_alignParentBottom="true"
+                />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:overScrollMode="never"
+            android:id="@+id/start_menu_entries"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@id/linearLayout"
             android:layout_alignParentBottom="true"
             />
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/start_menu_entries"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_toRightOf="@id/linearLayout"
-        android:layout_alignParentBottom="true"
-        />
 
 </RelativeLayout>
