@@ -114,6 +114,7 @@ public class MainActivity extends Activity {
             ProgramMenuEntry app = new ProgramMenuEntry(ri.activityInfo.loadIcon(manager), (String)ri.loadLabel(manager), ri.activityInfo.packageName);
             apps.add(app);
         }
+
     }
 
     private ArrayList<MenuEntry> prepareEntries() {

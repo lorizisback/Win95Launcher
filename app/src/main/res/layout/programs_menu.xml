@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/win_95_start_menu_programs_recyclerview"
-    android:orientation="vertical"
-    android:layout_width="250dp"
-    android:layout_height="wrap_content"
-    android:background="@drawable/win_95_menu_background"
-    android:visibility="invisible">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/win_95_start_menu_programs_container"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-</android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/win_95_start_menu_programs_recyclerview"
+        android:orientation="vertical"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/win_95_menu_background"
+        android:visibility="invisible"
+        android:layout_alignParentRight="true">
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
+

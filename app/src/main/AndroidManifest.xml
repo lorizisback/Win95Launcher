@@ -9,7 +9,8 @@
         android:launchMode="singleTask"
         android:clearTaskOnLaunch="true"
         android:stateNotNeeded="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:screenOrientation="portrait">
         <activity android:name=".MainActivity">
             <intent-filter>
 
