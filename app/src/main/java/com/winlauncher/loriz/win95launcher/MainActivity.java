@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.BatteryManager;
@@ -34,192 +35,186 @@ import java.util.List;
 
 public class MainActivity extends Activity {
 
-    private PackageManager manager;
-    private ArrayList<ProgramMenuEntry> apps;
-    private boolean isOpen = false;
-    private ImageView startNormal;
-    private RelativeLayout startMenu;
-    private RecyclerView startMenuEntries;
-    private BroadcastReceiver broadcastReceiver;
-    private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-    private CustomTextView clockTextview;
-    private LinearLayout taskbarContainer;
-    private int menuHeight;
-    private int menuWidth;
-    public int menuItemHeight;
-    private LinearLayoutManager mLayoutManager;
-    private double MENU_ITEM_RATIO = 3.63;
-    private RecyclerView list;
-    private RecyclerView programsMenuEntries;
-    private LinearLayoutManager mLayoutManagerPrograms;
-    private StartMenuAdapter sma;
-    private ImageView battery;
+   private PackageManager manager;
+   private ArrayList<ProgramMenuEntry> apps;
+   private boolean isOpen = false;
+   private ImageView startNormal;
+   private RelativeLayout startMenu;
+   private RecyclerView startMenuEntries;
+   private BroadcastReceiver broadcastReceiver;
+   private final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+   private CustomTextView clockTextview;
+   private LinearLayout taskbarContainer;
+   private LinearLayoutManager mLayoutManager;
+   private RecyclerView programsMenuEntries;
+   private LinearLayoutManager mLayoutManagerPrograms;
+   private StartMenuAdapter sma;
+   private ImageView battery;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+   @Override
+   protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_main);
 
-        startNormal = (ImageView) findViewById(R.id.start_button);
-        startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
-        startMenuEntries = (RecyclerView) startMenu.findViewById(R.id.start_menu_entries);
-        programsMenuEntries = (RecyclerView) findViewById(R.id.win_95_start_menu_programs_recyclerview);
-        battery = (ImageView) findViewById(R.id.taskbar_battery);
-        taskbarContainer = (LinearLayout) findViewById(R.id.taskbar_container);
-        clockTextview = (CustomTextView) findViewById(R.id.clock_textview);
-        clockTextview.getPaint().setAntiAlias(false);
-
-        View.OnClickListener clickList = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isOpen = startToggler();
-            }
-        };
-
-        startNormal.setOnClickListener(clickList);
-
-        // PREPARE DATAS FOR MENU
-        ArrayList<MenuEntry> entries = prepareEntries();
-        startMenuEntries.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        startMenuEntries.setLayoutManager(mLayoutManager);
-
-        sma = new StartMenuAdapter(entries, programsMenuEntries);
-
-        startMenuEntries.setAdapter(sma);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
+      startNormal = (ImageView) findViewById(R.id.start_button);
+      startMenu = (RelativeLayout) findViewById(R.id.start_menu_container);
+      startMenuEntries = (RecyclerView) startMenu.findViewById(R.id.start_menu_entries);
+      programsMenuEntries = (RecyclerView) findViewById(R.id.win_95_start_menu_programs_recyclerview);
+      battery = (ImageView) findViewById(R.id.taskbar_battery);
+      taskbarContainer = (LinearLayout) findViewById(R.id.taskbar_container);
+      clockTextview = (CustomTextView) findViewById(R.id.clock_textview);
+      clockTextview.getPaint().setAntiAlias(false);
 
-        //PROGRAMS
-        loadApps();
+      View.OnClickListener clickList = new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            isOpen = startToggler();
+         }
+      };
 
-        programsMenuEntries.setHasFixedSize(true);
-        mLayoutManagerPrograms = new LinearLayoutManager(this);
-        programsMenuEntries.setLayoutManager(mLayoutManagerPrograms);
+      startNormal.setOnClickListener(clickList);
 
-        ProgramsMenuAdapter pma = new ProgramsMenuAdapter(apps);
+      // PREPARE DATAS FOR MENU
+      ArrayList<MenuEntry> entries = prepareEntries();
+      startMenuEntries.setHasFixedSize(true);
+      mLayoutManager = new LinearLayoutManager(this);
+      startMenuEntries.setLayoutManager(mLayoutManager);
 
-        programsMenuEntries.setAdapter(pma);
+      sma = new StartMenuAdapter(entries, programsMenuEntries);
+
+      startMenuEntries.setAdapter(sma);
 
 
+      //PROGRAMS
+      loadApps();
 
-    }
+      programsMenuEntries.setHasFixedSize(true);
+      mLayoutManagerPrograms = new LinearLayoutManager(this);
+      programsMenuEntries.setLayoutManager(mLayoutManagerPrograms);
+
+      ProgramsMenuAdapter pma = new ProgramsMenuAdapter(apps);
+
+      programsMenuEntries.setAdapter(pma);
 
 
-    private void loadApps(){
-        manager = getPackageManager();
-        apps = new ArrayList<ProgramMenuEntry>();
+   }
 
-        Intent i = new Intent(Intent.ACTION_MAIN, null);
-        i.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        List<ResolveInfo> availableActivities = manager.queryIntentActivities(i, 0);
-        for(ResolveInfo ri:availableActivities){
-            ProgramMenuEntry app = new ProgramMenuEntry(ri.activityInfo.loadIcon(manager), (String)ri.loadLabel(manager), ri.activityInfo.packageName);
-            apps.add(app);
-        }
+   private void loadApps() {
+      manager = getPackageManager();
+      apps = new ArrayList<ProgramMenuEntry>();
 
-        Collections.sort(apps, new Comparator<ProgramMenuEntry>() {
-            @Override
-            public int compare(ProgramMenuEntry programMenuEntry, ProgramMenuEntry t1) {
-                return programMenuEntry.getName().compareToIgnoreCase(t1.getName());
-            }
+      Intent i = new Intent(Intent.ACTION_MAIN, null);
+      i.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        });
+      List<ResolveInfo> availableActivities = manager.queryIntentActivities(i, 0);
+      for (ResolveInfo ri : availableActivities) {
+         ProgramMenuEntry app = new ProgramMenuEntry(ri.activityInfo.loadIcon(manager), (String) ri.loadLabel(manager), ri.activityInfo.packageName);
+         apps.add(app);
+      }
 
-    }
+      Collections.sort(apps, new Comparator<ProgramMenuEntry>() {
+         @Override
+         public int compare(ProgramMenuEntry programMenuEntry, ProgramMenuEntry t1) {
+            return programMenuEntry.getName().compareToIgnoreCase(t1.getName());
+         }
 
-    private ArrayList<MenuEntry> prepareEntries() {
+      });
 
-        ArrayList<MenuEntry> out = new ArrayList<>();
-        out.add(new MenuEntry(R.drawable.shell32_20, getString(R.string.menu_programs_entry), "PROGRAMS",  true));
-        out.add(new MenuEntry(R.drawable.shell32_21, getString(R.string.menu_documents_entry), "DOCUMENTS", false));
-        out.add(new MenuEntry(R.drawable.shell32_22, getString(R.string.menu_settings_entry), "SETTINGS", false));
-        out.add(new MenuEntry(R.drawable.shell32_23, getString(R.string.menu_find_entry), "FIND", false));
-        out.add(new MenuEntry(R.drawable.shell32_24, getString(R.string.menu_help_entry), "HELP", false));
-        out.add(new MenuEntry(R.drawable.shell32_25, getString(R.string.menu_run_entry), "RUN",false));
-        out.add(new MenuEntry(R.drawable.shell32_28, getString(R.string.menu_shutdown_entry), "SHUTDOWN", false));
+   }
 
-        return out;
-    }
+   private ArrayList<MenuEntry> prepareEntries() {
 
-    private boolean startToggler()
-    {
-        if (isOpen == false) {
-            startNormal.setImageResource(R.drawable.start_pressed);
-            startMenu.setVisibility(View.VISIBLE);
+      ArrayList<MenuEntry> out = new ArrayList<>();
+      out.add(new MenuEntry(R.drawable.shell32_20, getString(R.string.menu_programs_entry), "PROGRAMS", true));
+      out.add(new MenuEntry(R.drawable.shell32_21, getString(R.string.menu_documents_entry), "DOCUMENTS", false));
+      out.add(new MenuEntry(R.drawable.shell32_22, getString(R.string.menu_settings_entry), "SETTINGS", false));
+      out.add(new MenuEntry(R.drawable.shell32_23, getString(R.string.menu_find_entry), "FIND", false));
+      out.add(new MenuEntry(R.drawable.shell32_24, getString(R.string.menu_help_entry), "HELP", false));
+      out.add(new MenuEntry(R.drawable.shell32_25, getString(R.string.menu_run_entry), "RUN", false));
+      out.add(new MenuEntry(R.drawable.shell32_28, getString(R.string.menu_shutdown_entry), "SHUTDOWN", false));
 
-        } else {
-            startNormal.setImageResource(R.drawable.start_unpressed);
-            startMenu.setVisibility(View.INVISIBLE);
+      return out;
+   }
+
+   private boolean startToggler() {
+      if (isOpen == false) {
+         startNormal.setImageResource(R.drawable.start_pressed);
+         startMenu.setVisibility(View.VISIBLE);
+
+      } else {
+         startNormal.setImageResource(R.drawable.start_unpressed);
+         startMenu.setVisibility(View.INVISIBLE);
+         programsMenuEntries.setVisibility(View.INVISIBLE);
+         sma.isProgramsOpen = false;
+      }
+
+      return !isOpen;
+
+   }
+
+   @Override
+   public void onBackPressed() {
+      if (isOpen == true) {
+
+         if (sma.isProgramsOpen == true) {
             programsMenuEntries.setVisibility(View.INVISIBLE);
-            sma.isProgramsOpen=false;
-        }
+            sma.isProgramsOpen = false;
+         } else {
+            isOpen = startToggler();
+         }
+      }
+   }
 
-        return !isOpen;
 
-    }
+   @Override
+   public void onStart() {
+      super.onStart();
+      clockTextview.setText(sdf.format(new Date()));
+      broadcastReceiver = new BroadcastReceiver() {
+         @Override
+         public void onReceive(Context ctx, Intent intent) {
 
-    @Override
-    public void onBackPressed() {
-        if (isOpen == true) {
+            if (intent.getAction().compareTo(Intent.ACTION_BATTERY_CHANGED) == 0) {
+               int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+               int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+               float percentage = level / (float) scale;
 
-            if (sma.isProgramsOpen == true) {
-                programsMenuEntries.setVisibility(View.INVISIBLE);
-                sma.isProgramsOpen = false;
-            } else {
-                isOpen = startToggler();
+               if (level <= 100 && level > 75) {
+                  battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_300));
+               } else if (level <= 75 && level > 25) {
+                  battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_301));
+               } else if (level <= 25 && level > 5) {
+                  battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_302));
+               } else {
+                  battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_303));
+               }
+
             }
-        }
-    }
 
+            if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0)
+               clockTextview.setText(sdf.format(new Date()));
+         }
+      };
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        clockTextview.setText(sdf.format(new Date()));
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context ctx, Intent intent) {
+      IntentFilter timeBattery = new IntentFilter();
+      timeBattery.addAction(Intent.ACTION_TIME_TICK);
+      timeBattery.addAction(Intent.ACTION_BATTERY_CHANGED);
 
-                if (intent.getAction().compareTo(Intent.ACTION_BATTERY_CHANGED) == 0)
-                {
-                    int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE,-1);
-                    int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
-                    float percentage = level / (float) scale;
+      registerReceiver(broadcastReceiver, timeBattery);
 
-                    if (level <= 100 && level >75) {
-                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_300));
-                    } else if (level <= 75 && level >25) {
-                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_301));
-                    } else if (level <= 25 && level >5) {
-                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_302));
-                    } else {
-                        battery.setImageDrawable(getResources().getDrawable(R.drawable.systray_303));
-                    }
+   }
 
-                }
-
-                if (intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0)  clockTextview.setText(sdf.format(new Date()));
-            }
-        };
-
-        IntentFilter timeBattery = new IntentFilter();
-        timeBattery.addAction(Intent.ACTION_TIME_TICK);
-        timeBattery.addAction(Intent.ACTION_BATTERY_CHANGED);
-
-        registerReceiver(broadcastReceiver, timeBattery);
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (broadcastReceiver != null)
-            unregisterReceiver(broadcastReceiver);
-    }
-
+   @Override
+   public void onStop() {
+      super.onStop();
+      if (broadcastReceiver != null)
+         unregisterReceiver(broadcastReceiver);
+   }
 
 
 }
