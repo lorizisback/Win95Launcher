@@ -12,13 +12,10 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 
 import com.febaisi.CustomTextView;
 import com.winlauncher.loriz.win95launcher.adapters.ProgramsMenuAdapter;
@@ -149,10 +146,11 @@ public class MainActivity extends Activity {
       } else {
          startNormal.setImageResource(R.drawable.start_unpressed);
          startMenu.setVisibility(View.INVISIBLE);
-         programsMenuEntries.setVisibility(View.INVISIBLE);
-         sma.isProgramsOpen = false;
+         if  (programsMenuEntries.getVisibility() == View.VISIBLE) {
+            sma.togglePrograms(sma.programHolder);
+            sma.isProgramsOpen = false;
+         }
       }
-
       return !isOpen;
 
    }
@@ -162,7 +160,7 @@ public class MainActivity extends Activity {
       if (isOpen == true) {
 
          if (sma.isProgramsOpen == true) {
-            programsMenuEntries.setVisibility(View.INVISIBLE);
+            sma.togglePrograms(sma.programHolder);
             sma.isProgramsOpen = false;
          } else {
             isOpen = startToggler();
@@ -209,7 +207,15 @@ public class MainActivity extends Activity {
 
    }
 
-   @Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
+    }
+
+    @Override
    public void onStop() {
       super.onStop();
       if (broadcastReceiver != null)

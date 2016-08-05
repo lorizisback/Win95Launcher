@@ -1,6 +1,7 @@
 package com.winlauncher.loriz.win95launcher.adapters;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,10 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
 
     private final ArrayList<MenuEntry> entryList;
     private RecyclerView pmentries;
-    public boolean isProgramsOpen;
-
+    public boolean isProgramsOpen = false;
+    public StartMenuViewHolder programHolder;
+    private StartMenuViewHolder findHolder;
+    private StartMenuViewHolder settingsHolder;
 
 
     public StartMenuAdapter(ArrayList<MenuEntry> entryList, RecyclerView pmentries) {
@@ -37,7 +40,6 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
     public StartMenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         View itemLayoutView = inflater.inflate(R.layout.start_menu_entry, parent, false);
 
         StartMenuViewHolder vh = new StartMenuViewHolder(itemLayoutView);
@@ -48,17 +50,18 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
     @Override
     public void onBindViewHolder(final StartMenuViewHolder holder, int position) {
 
+        //////////////////////////////////// CUSTOMIZE THE HOLDER //////////////////////////////////////////////
         holder.entryHiddenIdentifier.setText(entryList.get(position).getIdentifier());
-
         holder.entryIcon.setImageResource(entryList.get(position).getEntryIconId());
-
         holder.entryText.setText(entryList.get(position).getName());
-
         if (entryList.get(position).isExpandable()) holder.entryTriangle.setVisibility(View.VISIBLE);
 
 
 
+
+        //////////////////////////////////// CLICK ON SETTINGS //////////////////////////////////////////////
         if (holder.entryHiddenIdentifier.getText().equals("SETTINGS")) {
+            if (settingsHolder == null) settingsHolder = holder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -68,7 +71,10 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
 
         }
 
+
+        //////////////////////////////////// CLICK ON FIND //////////////////////////////////////////////
         if (holder.entryHiddenIdentifier.getText().equals("FIND")) {
+            if (findHolder == null) findHolder = holder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -84,19 +90,41 @@ public class StartMenuAdapter extends RecyclerView.Adapter<StartMenuAdapter.Star
 
         }
 
+
+        //////////////////////////////////// CLICK ON PROGRAMS //////////////////////////////////////////////
         if (holder.entryHiddenIdentifier.getText().equals("PROGRAMS")) {
+            if (programHolder == null) programHolder = holder;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    pmentries.setVisibility(View.VISIBLE);
-                    isProgramsOpen = true;
-
+                    togglePrograms(holder);
                     }
             });
 
         }
 
+    }
+
+
+
+    /////////////////////////////// SUPPORT METHOD FOR PROGRAM SUBMENU MANAGEMENT /////////////////////////////////////////////////
+
+    public void togglePrograms(StartMenuViewHolder holder) {
+
+        if (isProgramsOpen) {
+            //chiudi
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.transparent));
+            holder.entryText.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.black));
+            pmentries.setVisibility(View.INVISIBLE);
+            isProgramsOpen = false;
+
+        } else {
+            //apri
+            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.selected_blue));
+            holder.entryText.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.white));
+            pmentries.setVisibility(View.VISIBLE);
+            isProgramsOpen = true;
+        }
     }
 
     @Override
